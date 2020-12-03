@@ -5,8 +5,12 @@ const fs = require('fs/promises');
 const path = require('path');
 
 class Api {
-    constructor (port, autoStart = true) {
+    constructor (port, autoStart = true, database) {
+        this.fastify = fastify;
         this.port = port;
+
+        if (database) fastify.register(require('../plugins/fastify-mysql'), database);
+
         this.loadRoutes().then((_) => {
             if (autoStart) this.startApi();
         }).catch((error) => fastify.log.error(error));
